@@ -16,18 +16,20 @@ Check Bob's final step (4):
 
 
 
-The naive approach in Python is to try the following:
+First very naive attempt:
 
-```
-proved = _g**_t == _a * _h**_c
+
+proved = _g**_t % _p == _a * _h**_c %_p
 
 print("Bob can check Alice's knowledge: ", proved)
-```
-
-However, due to the dimension of the numbers, we cannot do it in this way. We can, but probably that is the only this that we will 
-be able to do during our lifetime...
-
 """
+
+
+proved = pow(_g, _t, _p) == _a * pow(_h, _c, _p) % _p
+
+print("Bob can check Alice's knowledge: ", proved)
+
+
 
 
 
