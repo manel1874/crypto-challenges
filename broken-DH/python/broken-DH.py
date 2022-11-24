@@ -10,37 +10,90 @@ _t = 931264650198777667712306999616533495332023890851422783089289457796706601069
 
 
 
-"""
-
-Check Bob's final step (4):
+""" ## Check Bob's final step (4): ##
 
 
-
-First very naive attempt:
-
+### First naive attempt: ###
 
 proved = _g**_t % _p == _a * _h**_c %_p
 
 print("Bob can check Alice's knowledge: ", proved)
-"""
 
+
+### Second realistic attempt: ###
 
 proved = pow(_g, _t, _p) == _a * pow(_h, _c, _p) % _p
 
 print("Bob can check Alice's knowledge: ", proved)
 
+"""
 
+""" ## Brute-force attempt: ##
+
+
+### First naive attempt: ###
+"""
 
 
 
 
 """
+### Second naive attempt: ###
+
+
+
+
 sol = []
 y = _g
 
 t0 = time.time()
-for r in range(2**50):
-	y = y *_g % _p
+for r in range(2**5):
+	y = y * _g % _p
+	if y == _a:
+		print("Yay!")
+		print(r)
+
+t1 = time.time()
+total_new = t1-t0
+
+print("Total time in the new way: ", total_new)	
+
+
+### Third naive attempt: ###
+
+
+
+
+
+def moduloMultiplication(a, b, mod):
+ 
+    res = 0; # Initialize result
+ 
+    # Update a if it is more than
+    # or equal to mod
+    a = a % mod;
+ 
+    while (b):
+     
+        # If b is odd, add a with result
+        if (b & 1):
+            res = (res + a) % mod;
+             
+        # Here we assume that doing 2*a
+        # doesn't cause overflow
+        a = (2 * a) % mod;
+ 
+        b >>= 1; # b = b / 2
+     
+    return res;
+
+
+sol = []
+y = _g
+
+t0 = time.time()
+for r in range(2**5):
+	y = moduloMultiplication(y,_g, _p)
 	if y == _a:
 		print("Yay!")
 		print(r)
@@ -50,4 +103,56 @@ total_new = t1-t0
 		
 print("Total time in the new way: ", total_new)	
 """
+
+
+"""
+Using the Baby-step approach
+"""
+
+import math;
+ 
+def discreteLogarithm(a, b, m):
+ 
+    n = math.isqrt(m);
+ 
+    # Calculate a ^ n
+    an = 1;
+    for i in range(n):
+        an = (an * a) % m;
+ 
+    value = [0] * m;
+ 
+    # Store all values of a^(n*i) of LHS
+    cur = an;
+    for i in range(1, n + 1):
+        if (value[ cur ] == 0):
+            value[ cur ] = i;
+        cur = (cur * an) % m;
+     
+    cur = b;
+    for i in range(n + 1):
+         
+        # Calculate (a ^ j) * b and check
+        # for collision
+        if (value[cur] > 0):
+            ans = value[cur] * n - i;
+            if (ans < m):
+                return ans;
+        cur = (cur * a) % m;
+ 
+    return -1;
+ 
+# Driver code
+a = 2;
+b = 3;
+m = 5;
+print(discreteLogarithm(a, b, m));
+ 
+a = 3;
+b = 7;
+m = 11;
+print(discreteLogarithm(a, b, m));
+
+
+print(discreteLogarithm(_g, _a, _p));
 

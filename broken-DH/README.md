@@ -24,7 +24,7 @@ Transcript and problem parameters:
 - t = 9312646501987776677123069996165334953320238908514227830892894577967066010696080028032345464092038552178334908514757885668168857837159455619655708977528533978424087822692334952394425457616804123105906796449332890016607809976150608314165053890213678247959214214602749195694451747310100020199660344584515222600627105504679940926315507796335602231758745928978650450797822806071056984134
 
 
-## First approach
+## First approach (brute force attack)
 
 At step 1. we have that Alice uses her broken pseudo-random number generator to generate some 50-bit number `r` in Z_p. Since, we know `_g` and `_a` we can use a brute-force strategy to find `r`. Given `r` it is straightforward to compute the desired value `x`:
 
@@ -34,4 +34,4 @@ x = (t-r)/c mod p-1 (= \phi(p))
 
 The point of the challenge is to develop a very fast brute-force attack.
 
-
+Since `r` is a 50-bit number, we need to test `2^50 = 1 125 899 906 842 624` different values of `r`.

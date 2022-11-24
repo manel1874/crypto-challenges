@@ -37,9 +37,15 @@ By running the script we get:
 >>> sys     0m0.004s
 ```
 
-### Find r
+## First approach (brute-force)
 
-As 
+The aim of the brute force is to find the value of `r` given both `_a` and `_g`. 
+
+### First attempt
+
+
+
+
 
 
 
