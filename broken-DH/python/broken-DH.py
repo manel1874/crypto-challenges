@@ -1,5 +1,6 @@
 
 import time
+from decimal import *
 
 _p = 21847359589888208475506724917162265063571401985325370367631361781114029653025956815157605328190411141044160689815741319381196532979871500038979862309158738250945118554961626824152307536605872616502884288878062467052777605227846709781850614792748458838951342204812601838112937805371782600380106020522884406452823818824455683982042882928183431194593189171431066371138510252979648513553078762584596147427456837289623008879364829477705183636149304120998948654278133874026711188494311770883514889363351380064520413459602696141353949407971810071848354127868725934057811052285511726070951954828625761984797831079801857828431
 _g = 21744646143243216057020228551156208752703942887207308868664445275548674736620508732925764357515199547303283870847514971207187185912917434889899462163342116463504651187567271577773370136574456671482796328194698430314464307239426297609039182878000113673163760381575629928593038563536234958563213385495445541911168414741250494418615704883548296728080545795859843320405072472266753448906714605637308642468422898558630812487636188819677130134963833040948411243908028200183454403067866539747291394732970142401544187137624428138444276721310399530477238861596789940953323090393313600101710523922727140772179016720953265564666
@@ -92,8 +93,8 @@ sol = []
 y = _g
 
 t0 = time.time()
-for r in range(2**5):
-	y = moduloMultiplication(y,_g, _p)
+for r in range(2**20):
+	y = y * _g % _p
 	if y == _a:
 		print("Yay!")
 		print(r)
@@ -110,17 +111,40 @@ Using the Baby-step approach
 """
 
 import math;
+
+def my_int_exp(decimal_instance):
+
+    list_d = str(decimal_instance).split('E+')
+    list_dd = str(list_d[0]).split('.')
+
+    # Positive exponent
+    exponent = int(list_d[1]) - len(list_dd[1])
+    integer = int(list_dd[0] + list_dd[1])
+
+    return integer, exponent
+
  
 def discreteLogarithm(a, b, m):
  
-    n = math.isqrt(m);
+    N = 2**50
+    n = int(math.sqrt(N));
+
+    #n_string = Decimal(N).sqrt();
+    #n_integer, n_exponent = my_int_exp(n_string);
+    #n = n_integer* 10**n_exponent
  
+    print(n)
     # Calculate a ^ n
-    an = 1;
-    for i in range(n):
-        an = (an * a) % m;
+    #an = 1;
+    #for i in range(n):
+    #    an = (an * a) % m;
+    an = pow(a,n,m)
+    print(an)
  
-    value = [0] * m;
+    
+
+    value_an = [0] * (n+1);
+    #value_bani = 
  
     # Store all values of a^(n*i) of LHS
     cur = an;
@@ -141,18 +165,166 @@ def discreteLogarithm(a, b, m):
         cur = (cur * a) % m;
  
     return -1;
+
+
+from math import ceil, sqrt
+
+
+def bsgs_problem(g, h, p):
+    '''
+    Solve for x in h = g^x mod p given a prime p.
+    If p is not prime, you shouldn't use BSGS anyway.
+    '''
+
+    N = ceil(sqrt(2**50))  # phi(p) is p-1 if p is prime
+    print(N)
+    # Store hashmap of g^{1...m} (mod p). Baby step.
+    #tbl = {pow(g, i, p): i for i in range(N)}
+    tbl = {}
+    gi = 1
+    for i in range(N):
+        if i % 100000 == 0:
+            print("We are at ith iteration: ", i)
+        tbl[gi] = i
+        gi = (gi * g) % p
+    print("After hashmap")
+    #print(tbl)
+
+    # Precompute via Fermat's Little Theorem
+    c = pow(g, N * (p - 2), p)
+
+    cj = 1
+    # Search for an equivalence in the table. Giant step.
+    for j in range(N):
+        if j % 100000 == 0:
+            print("We are at jth iteration: ", j)
+        cj = (cj * c) % p
+        y = (h * cj) % p
+        if y in tbl:
+            return (j+1) * N + tbl[y]
+
+    # Solution not found
+    return None
  
+
+
+
+
+
+
 # Driver code
 a = 2;
 b = 3;
 m = 5;
-print(discreteLogarithm(a, b, m));
+#print(discreteLogarithm(a, b, m));
  
 a = 3;
 b = 7;
 m = 11;
-print(discreteLogarithm(a, b, m));
+#print(discreteLogarithm(a, b, m));
 
 
-print(discreteLogarithm(_g, _a, _p));
+
+#N = 2**50
+#n_string = Decimal(N).sqrt();
+#print(n_string)
+#n_integer, n_exponent = my_int_exp(n_string);
+#n = n_integer* 10**n_exponent
+
+
+###### PROBLEM
+"""
+sol = bsgs_problem(_g, _a, _p)
+print(sol)
+
+f = open("solution.txt", "a")
+f.write(str(sol))
+f.close()
+"""
+# >>> r = 996179739629170
+#
+# >>> real	21m51.724s
+# >>> user	21m41.764s
+# >>> sys	0m9.531s
+
+# It uses 12,13 GB of RAM
+
+# Let us test the result
+
+print("Indeed we have that g^r = a mod p: ", pow(_g, 996179739629170, _p) == _a % _p)
+
+r = 996179739629170
+
+
+
+
+getcontext().prec = 5000
+cx = (_t - r) % (_p-1)
+
+
+cx_D = Decimal(cx)
+print("cx_D is: ", cx_D)
+c_D = Decimal(_c)
+print("c_D is: ", c_D)
+x_D = cx_D/c_D
+print("x_D is: ", x_D)
+x = cx/_c
+
+print(x_D)
+#print(x)
+
+# Check
+
+print(_t == (r + _c*x_D) % (_p-1))
+
+
+f = open("solution_x.txt", "a")
+f.write(str(x_D))
+f.close()
+
+
+
+def bsgs_test(g, h, p):
+    '''
+    Solve for x in h = g^x mod p given a prime p.
+    If p is not prime, you shouldn't use BSGS anyway.
+    '''
+
+    N = ceil(sqrt(p-1))  # phi(p) is p-1 if p is prime
+    print(N)
+    # Store hashmap of g^{1...m} (mod p). Baby step.
+    #tbl = {pow(g, i, p): i for i in range(N)}
+    tbl = {}
+    gi = 1
+    for i in range(N):
+        if i % 100000 == 0:
+            print("We are at ith iteration: ", i)
+        tbl[gi] = i
+        gi = (gi * g) % p
+    print("After hashmap")
+    print(tbl)
+
+    # Precompute via Fermat's Little Theorem
+    c = pow(g, N * (p - 2), p)
+
+    cj = 1
+    # Search for an equivalence in the table. Giant step.
+    for j in range(N):
+        if j % 100000 == 0:
+            print("We are at jth iteration: ", j)
+        cj = (cj * c) % p
+        y = (h * cj) % p
+        if y in tbl:
+            return (j+1) * N + tbl[y]
+
+    # Solution not found
+    return None
+
+#print("Solution is: ", bsgs_test(5, 22, 137))
+
+
+
+
+
+
 
