@@ -35,9 +35,9 @@ print("Bob can check Alice's knowledge: ", proved)
 
 ### First naive attempt: ###
 
-def bf_1st_attempt(g, a, p, range):
+def bf_1st_attempt(g, a, p, my_range):
 
-    for r in range(range):
+    for r in range(my_range):
         y = pow(g, r, p)
         if y == a:
             return r
@@ -45,9 +45,9 @@ def bf_1st_attempt(g, a, p, range):
     return None
 
 
-range = 2**20
+my_range = 2**20
 t0 = time.time()
-r = bf_1st_attempt(_g, _a, _p, range)
+r = bf_1st_attempt(_g, _a, _p, my_range)
 print(r)
 t1 = time.time()
 total_1st = t1-t0
@@ -62,10 +62,10 @@ print("Total time in the first attempt: ", total_1st)
 ### Second naive attempt: ###
 
 
-def bf_2nd_attempt(g, a, p, range):
+def bf_2nd_attempt(g, a, p, my_range):
     
     y = g
-    for r in range(range):
+    for r in range(my_range):
         y = (y * g) % p
         if y == a:
             return r
@@ -73,9 +73,10 @@ def bf_2nd_attempt(g, a, p, range):
     return None
 
 
-range = 2**20
+my_range = 2**20
 t0 = time.time()
-r = bf_2nd_attempt(_g, _a, _p, range)
+r = bf_2nd_attempt(_g, _a, _p, my_range)
+print(r)
 t1 = time.time()
 total_1st = t1-t0
 

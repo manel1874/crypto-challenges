@@ -43,12 +43,41 @@ The aim of this brute force approach is simply to run through all possible value
 
 ### First attempt
 
-In our first attempt, we use the function `bf_1st_attempt`. Here, in every iteration we compute `pow(_g, r, _p)` for different values of `r`. 
+In our first attempt, we use the function `bf_1st_attempt`. Here, in every iteration we compute `pow(_g, r, _p)` for different values of `r`. If we follow this approach for `my_range = 2**15`, we get:
+
+```
+>>> None
+>>> Total time in the first attempt: 8.1058
+```
+
+For `my_range = 2**50`, and assuming the time is linear with `my_range` (which is not the case), it would take around `8 * 2**35 = 274877906944` seconds (around 8 716 years...) to find the desired `r`. Not good enough...
 
 ### Second attempt
 
+We can improve the computation efficiency inside the `for` loop by avoiding using the `pow` operation. In fact, for every iteration we are computing a new exponential that only increases by one with respect to the previous iteration. 
+
+In this second attempt, we avoid using the `pow` operation and only use modular multiplication. If we follow this approach for `my_range = 2**15`, we get:
+
+```
+>>> None
+>>> Total time in the first attempt: 0.4816
+```
+
+It is a little better but definitly not enough. It would take around 523 years to go through all cases. We have leave this naive brute force approach and try a new one.
+
 
 ## Second approach (baby-step giant-step)
+
+
+
+
+## Important libraries
+
+- Big integers library: `decimal`
+
+
+[1] (Asecurity site - Baby-Step-Giant-Step)[https://asecuritysite.com/encryption/baby
+
 
 
 
