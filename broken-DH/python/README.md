@@ -39,11 +39,16 @@ By running the script we get:
 
 ## First approach (brute-force)
 
-The aim of the brute force is to find the value of `r` given both `_a` and `_g`. 
+The aim of this brute force approach is simply to run through all possible values `r` given both `_a` and `_g`. As stated in the main article this amounts for at most `2^50 = 1 125 899 906 842 624` tests. 
 
 ### First attempt
 
+In our first attempt, we use the function `bf_1st_attempt`. Here, in every iteration we compute `pow(_g, r, _p)` for different values of `r`. 
 
+### Second attempt
+
+
+## Second approach (baby-step giant-step)
 
 
 

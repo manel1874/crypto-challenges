@@ -1,6 +1,7 @@
 
 import time
 from decimal import *
+from math import ceil, sqrt
 
 _p = 21847359589888208475506724917162265063571401985325370367631361781114029653025956815157605328190411141044160689815741319381196532979871500038979862309158738250945118554961626824152307536605872616502884288878062467052777605227846709781850614792748458838951342204812601838112937805371782600380106020522884406452823818824455683982042882928183431194593189171431066371138510252979648513553078762584596147427456837289623008879364829477705183636149304120998948654278133874026711188494311770883514889363351380064520413459602696141353949407971810071848354127868725934057811052285511726070951954828625761984797831079801857828431
 _g = 21744646143243216057020228551156208752703942887207308868664445275548674736620508732925764357515199547303283870847514971207187185912917434889899462163342116463504651187567271577773370136574456671482796328194698430314464307239426297609039182878000113673163760381575629928593038563536234958563213385495445541911168414741250494418615704883548296728080545795859843320405072472266753448906714605637308642468422898558630812487636188819677130134963833040948411243908028200183454403067866539747291394732970142401544187137624428138444276721310399530477238861596789940953323090393313600101710523922727140772179016720953265564666
@@ -33,6 +34,25 @@ print("Bob can check Alice's knowledge: ", proved)
 
 
 ### First naive attempt: ###
+
+def bf_1st_attempt(g, a, p, range):
+
+    for r in range(range):
+        y = pow(g, r, p)
+        if y == a:
+            return r
+    
+    return None
+
+
+range = 2**20
+t0 = time.time()
+r = bf_1st_attempt(_g, _a, _p, range)
+print(r)
+t1 = time.time()
+total_1st = t1-t0
+
+print("Total time in the first attempt: ", total_1st)
 """
 
 
@@ -42,67 +62,25 @@ print("Bob can check Alice's knowledge: ", proved)
 ### Second naive attempt: ###
 
 
+def bf_2nd_attempt(g, a, p, range):
+    
+    y = g
+    for r in range(range):
+        y = (y * g) % p
+        if y == a:
+            return r
+    
+    return None
 
 
-sol = []
-y = _g
-
+range = 2**20
 t0 = time.time()
-for r in range(2**5):
-	y = y * _g % _p
-	if y == _a:
-		print("Yay!")
-		print(r)
-
+r = bf_2nd_attempt(_g, _a, _p, range)
 t1 = time.time()
-total_new = t1-t0
+total_1st = t1-t0
 
-print("Total time in the new way: ", total_new)	
+print("Total time in the second attempt: ", total_2nd)
 
-
-### Third naive attempt: ###
-
-
-
-
-
-def moduloMultiplication(a, b, mod):
- 
-    res = 0; # Initialize result
- 
-    # Update a if it is more than
-    # or equal to mod
-    a = a % mod;
- 
-    while (b):
-     
-        # If b is odd, add a with result
-        if (b & 1):
-            res = (res + a) % mod;
-             
-        # Here we assume that doing 2*a
-        # doesn't cause overflow
-        a = (2 * a) % mod;
- 
-        b >>= 1; # b = b / 2
-     
-    return res;
-
-
-sol = []
-y = _g
-
-t0 = time.time()
-for r in range(2**20):
-	y = y * _g % _p
-	if y == _a:
-		print("Yay!")
-		print(r)
-
-t1 = time.time()
-total_new = t1-t0
-		
-print("Total time in the new way: ", total_new)	
 """
 
 
@@ -110,67 +88,9 @@ print("Total time in the new way: ", total_new)
 Using the Baby-step approach
 """
 
-import math;
-
-def my_int_exp(decimal_instance):
-
-    list_d = str(decimal_instance).split('E+')
-    list_dd = str(list_d[0]).split('.')
-
-    # Positive exponent
-    exponent = int(list_d[1]) - len(list_dd[1])
-    integer = int(list_dd[0] + list_dd[1])
-
-    return integer, exponent
-
- 
-def discreteLogarithm(a, b, m):
- 
-    N = 2**50
-    n = int(math.sqrt(N));
-
-    #n_string = Decimal(N).sqrt();
-    #n_integer, n_exponent = my_int_exp(n_string);
-    #n = n_integer* 10**n_exponent
- 
-    print(n)
-    # Calculate a ^ n
-    #an = 1;
-    #for i in range(n):
-    #    an = (an * a) % m;
-    an = pow(a,n,m)
-    print(an)
- 
-    
-
-    value_an = [0] * (n+1);
-    #value_bani = 
- 
-    # Store all values of a^(n*i) of LHS
-    cur = an;
-    for i in range(1, n + 1):
-        if (value[ cur ] == 0):
-            value[ cur ] = i;
-        cur = (cur * an) % m;
-     
-    cur = b;
-    for i in range(n + 1):
-         
-        # Calculate (a ^ j) * b and check
-        # for collision
-        if (value[cur] > 0):
-            ans = value[cur] * n - i;
-            if (ans < m):
-                return ans;
-        cur = (cur * a) % m;
- 
-    return -1;
 
 
-from math import ceil, sqrt
-
-
-def bsgs_problem(g, h, p):
+def bsgs_attempt(g, h, p):
     '''
     Solve for x in h = g^x mod p given a prime p.
     If p is not prime, you shouldn't use BSGS anyway.
