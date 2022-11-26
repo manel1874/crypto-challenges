@@ -68,13 +68,17 @@ It is a little better but definitly not enough. It would take around 523 years t
 
 ## Second approach (baby-step giant-step)
 
+We can find the solution using a tailored version of baby-step giant-step. This tailored version takes into consideration that `r` has at most 50-bit length. This is achieved by function `bsgs_attempt()` which saves the solution to the file `solution_r.txt`. It took us 21m51s to find the solution! Yay! Much faster than 523 years...!
 
+The final solution `x` was found using the function `get_x()`, which saves the solution to the file `solution_x.txt`. To compute with big numbers we used the `decimal` library, which allows to define the precision required for each use case. 
 
 
 ## Important libraries
 
 - Big integers library: `decimal`
 
+
+## References
 
 [1] (Asecurity site - Baby-Step-Giant-Step)[https://asecuritysite.com/encryption/baby]
 

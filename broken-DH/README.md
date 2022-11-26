@@ -52,13 +52,20 @@ The baby-step giant-step [1] algorithm has computational complexity O(\sqrt(p)) 
 Reall that our aim is to find `r` such that `g^r = a mod p`. Since `r < 2^50`, we only need to build a baby table with `\sqrt(2^50) = 2^25 = 33 554 432` elements. Although big, it is already manageble by current computers.
 
 
-| `my_range` |  Result  |  RAM consumption  |
-|------------|:--------:|:-----------------:|
-| Python     |   22m    |     12,13 Gb      |
-| C++        |          |                   |
-| Rust       |          |                   |
+| `my_range` |   Result   |  RAM consumption  |
+|------------|:----------:|:-----------------:|
+| Python     | 21m51.724s |     12,13 Gb      |
+| C++        |            |                   |
+| Rust       |            |                   |
 
 
+## Solution
+
+`r = 996 179 739 629 170`
+
+`x = 129 741 816 436 586 536 192 511 069 033 522 723 797 805 991 085 207 391 260 653 840 826 086 090 109`
+
+## References
 
 [1] (MIT 18.783)[https://math.mit.edu/classes/18.783/2022/LectureNotes9.pdf]
 

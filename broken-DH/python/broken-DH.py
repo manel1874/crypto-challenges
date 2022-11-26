@@ -30,7 +30,7 @@ print("Bob can check Alice's knowledge: ", proved)
 
 """
 
-""" ## Brute-force attempt: ##
+""" ## Brute-force approach: ##
 
 
 ### First naive attempt: ###
@@ -86,30 +86,27 @@ print("Total time in the second attempt: ", total_2nd)
 
 
 """
-Using the Baby-step approach
+Baby-step giant-step approach
 """
 
 
 
-def bsgs_attempt(g, h, p):
+def bsgs_attempt(g, h, p, cap, debug=False):
     '''
     Solve for x in h = g^x mod p given a prime p.
     If p is not prime, you shouldn't use BSGS anyway.
     '''
 
-    N = ceil(sqrt(2**50))  # phi(p) is p-1 if p is prime
-    print(N)
-    # Store hashmap of g^{1...m} (mod p). Baby step.
-    #tbl = {pow(g, i, p): i for i in range(N)}
+    N = ceil(sqrt(cap))
+    # Baby step.
     tbl = {}
     gi = 1
     for i in range(N):
-        if i % 100000 == 0:
+        if debug & (i % 100000 == 0):
             print("We are at ith iteration: ", i)
         tbl[gi] = i
         gi = (gi * g) % p
-    print("After hashmap")
-    #print(tbl)
+    print("After hashmap") if debug else None
 
     # Precompute via Fermat's Little Theorem
     c = pow(g, N * (p - 2), p)
@@ -117,51 +114,29 @@ def bsgs_attempt(g, h, p):
     cj = 1
     # Search for an equivalence in the table. Giant step.
     for j in range(N):
-        if j % 100000 == 0:
+        
+        if debug & (j % 100000 == 0):
             print("We are at jth iteration: ", j)
+        
         cj = (cj * c) % p
         y = (h * cj) % p
+
         if y in tbl:
-            return (j+1) * N + tbl[y]
+            sol = (j+1) * N + tbl[y]
+            f = open("solution_r.txt", "a")
+            f.write(str(sol))
+            f.close()
+            return sol
 
     # Solution not found
     return None
  
 
+#=================== RUN ===================#
 
+sol = bsgs_attempt(_g, _a, _p, 2**50)
+print("r = ", sol)
 
-
-
-
-# Driver code
-a = 2;
-b = 3;
-m = 5;
-#print(discreteLogarithm(a, b, m));
- 
-a = 3;
-b = 7;
-m = 11;
-#print(discreteLogarithm(a, b, m));
-
-
-
-#N = 2**50
-#n_string = Decimal(N).sqrt();
-#print(n_string)
-#n_integer, n_exponent = my_int_exp(n_string);
-#n = n_integer* 10**n_exponent
-
-
-###### PROBLEM
-"""
-sol = bsgs_problem(_g, _a, _p)
-print(sol)
-
-f = open("solution.txt", "a")
-f.write(str(sol))
-f.close()
-"""
 # >>> r = 996179739629170
 #
 # >>> real	21m51.724s
@@ -170,40 +145,47 @@ f.close()
 
 # It uses 12,13 GB of RAM
 
-# Let us test the result
+#=================== TEST ===================#
 
-print("Indeed we have that g^r = a mod p: ", pow(_g, 996179739629170, _p) == _a % _p)
+#print("Indeed we have that g^r = a mod p: ", pow(_g, 996179739629170, _p) == _a % _p)
+print("Indeed we have that g^r = a mod p: ", pow(_g, sol, _p) == _a % _p)
 
 r = 996179739629170
 
 
+#=================== GET x ===================#
 
+def get_x(r, t, p, c, debug=False):
 
-getcontext().prec = 5000
-cx = (_t - r) % (_p-1)
+    # Increase precision to use Decimal
+    getcontext().prec = 5000
+    cx = (_t - r) % (_p-1)
 
+    cx_D = Decimal(cx)
+    print("cx_D is: ", cx_D) if debug else None
+    c_D = Decimal(c)
+    print("c_D is: ", c_D) if debug else None
+    x_D = cx_D/c_D
+    print("x_D is: ", x_D) if debug else None
 
-cx_D = Decimal(cx)
-print("cx_D is: ", cx_D)
-c_D = Decimal(_c)
-print("c_D is: ", c_D)
-x_D = cx_D/c_D
-print("x_D is: ", x_D)
-x = cx/_c
+    # Check
 
-print(x_D)
-#print(x)
+    correct = t == (r + c*x_D) % (p-1)
+    if correct:
+        f = open("solution_x.txt", "a")
+        f.write(str(x_D))
+        f.close()
 
-# Check
+        return x_D
+    
+    else:
+        raise NameError('Could not compute x because the value r is incorrect.')
 
-print(_t == (r + _c*x_D) % (_p-1))
+x = get_x(r, _t, _p, _c)
+print("x = ", x)
 
-
-f = open("solution_x.txt", "a")
-f.write(str(x_D))
-f.close()
-
-
+"""
+Test environment
 
 def bsgs_test(g, h, p):
     '''
@@ -241,10 +223,9 @@ def bsgs_test(g, h, p):
     # Solution not found
     return None
 
-#print("Solution is: ", bsgs_test(5, 22, 137))
+print("Solution is: ", bsgs_test(5, 22, 137))
 
-
-
+"""
 
 
 
