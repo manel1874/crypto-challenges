@@ -76,7 +76,7 @@ It is a little better but definitly not enough. It would take around 523 years t
 - Big integers library: `decimal`
 
 
-[1] (Asecurity site - Baby-Step-Giant-Step)[https://asecuritysite.com/encryption/baby
+[1] (Asecurity site - Baby-Step-Giant-Step)[https://asecuritysite.com/encryption/baby]
 
 
 

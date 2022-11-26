@@ -45,9 +45,23 @@ Our first approach follows a naive brute force attack. Since `r` is a 50-bit num
 
 ### Second approach (baby-step giant-step)
 
+We could try to optimize our brute-force approach by parallelizing the loop operation (e.g. using `multiprocessing` in Python). However, that may not be enough. Let us look at a better performing algorithm. 
+
+The baby-step giant-step [1] algorithm has computational complexity O(\sqrt(p)) and space complexity O(\sqrt(p)). For very big primes `p`, the space complexity makes the algorithm impractical. For 512-bit prime number, we will need to store `115, 792, 089, 237, 316, 195, 423, 570, 985, 008, 687, 907, 853, 269, 984, 665, 640, 564, 039, 457, 584, 007, 913, 129, 639, 936` values in our baby table [2]. Although this is not practical for our value of `p`, we can tailor the protocol to take into account the fact that `r` is not big that big.
+
+Reall that our aim is to find `r` such that `g^r = a mod p`. Since `r < 2^50`, we only need to build a baby table with `\sqrt(2^50) = 2^25 = 33 554 432` elements. Although big, it is already manageble by current computers.
+
+
+| `my_range` |  Result  |  RAM consumption  |
+|------------|:--------:|:-----------------:|
+| Python     |   22m    |     12,13 Gb      |
+| C++        |          |                   |
+| Rust       |          |                   |
 
 
 
-[1] (MIT 18.783)[https://math.mit.edu/classes/18.783/2022/LectureNotes9.pdf
+[1] (MIT 18.783)[https://math.mit.edu/classes/18.783/2022/LectureNotes9.pdf]
+
+[2] (Asecurity site - Baby-Step-Giant-Step)[https://asecuritysite.com/encryption/baby]
 
 
