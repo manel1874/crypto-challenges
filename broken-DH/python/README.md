@@ -80,7 +80,7 @@ The final solution `x` was found using the function `get_x()`, which saves the s
 
 ## References
 
-[1] (Asecurity site - Baby-Step-Giant-Step)[https://asecuritysite.com/encryption/baby]
+[1] [Asecurity site - Baby-Step-Giant-Step](https://asecuritysite.com/encryption/baby)
 
 
 

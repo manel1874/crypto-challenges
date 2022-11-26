@@ -67,8 +67,8 @@ Reall that our aim is to find `r` such that `g^r = a mod p`. Since `r < 2^50`, w
 
 ## References
 
-[1] (MIT 18.783)[https://math.mit.edu/classes/18.783/2022/LectureNotes9.pdf]
+[1] [MIT 18.783](https://math.mit.edu/classes/18.783/2022/LectureNotes9.pdf)
 
-[2] (Asecurity site - Baby-Step-Giant-Step)[https://asecuritysite.com/encryption/baby]
+[2] [Asecurity site - Baby-Step-Giant-Step](https://asecuritysite.com/encryption/baby)
 
 
