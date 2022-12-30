@@ -1,0 +1,3 @@
+[submodule "zkHackI/1-Lets-Hash-It-Out/zkhack-bls-pedersen"]
+	path = zkHackI/1-Lets-Hash-It-Out/zkhack-bls-pedersen
+	url = https://github.com/kobigurk/zkhack-bls-pedersen.git
