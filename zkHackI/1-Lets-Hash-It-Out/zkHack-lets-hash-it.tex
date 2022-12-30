@@ -1,0 +1,70 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{bm}
+
+
+
+\title{zkHack | Let's hash it out}
+\author{Manuel B. Santos}
+\date{December 2022}
+
+\begin{document}
+
+\maketitle
+
+\noindent Puzzle: \url{https://zkhack.dev/events/puzzle1.html}.
+
+\section{Solution}
+
+We are told we have access to $256$ messages $m_1, \ldots, m_{256}$ and their corresponding BLS signatures $\sigma_1, \ldots, \sigma_{256}$.
+
+Recall how these signatures are generated:
+$$\sigma_i = sk \cdot H(m_i),$$
+where $H(m_i)$ is the Pedersen hash. We can expand the above signature expression by plugging in the definition of $H(m)$. For some general message $m$ and random elements $g_1, \ldots, g_{n}$, 
+$$H(m) := \sum_{j=1}^{n} h(m)_j \cdot g_j,$$
+where $h$ is some $n-$bit  hash function and $h(m)_j$ is its $j-$th bit. In the context of the challenge, $n=256$ and $h$ is the blake2s hash.
+
+By linearity we have, 
+\begin{align}
+\sigma_i &= sk \cdot \sum_{j=1}^{256} h(m_i)_j \cdot g_j \nonumber \\
+&= \sum_{j=1}^{256} h(m_i)_j \cdot \left(sk \cdot g_j\right) \nonumber \\
+&= \sum_{j=1}^{256} h(m_i)_j \cdot pk_j \label{eq:sigs},
+\end{align}
+where we denote $pk_j = sk\cdot g_j$ for short. 
+
+Therefore, in order to sign some general message $m$, we need to know the elements $pk_j$:
+
+\begin{equation}
+\label{eq:main}
+    \sigma_m = \sum_{j=1}^{256} h(m)_j \cdot pk_j.
+\end{equation}
+
+To find the elements $pk_j$, let us rewrite the expression \eqref{eq:sigs} in matrix format:
+
+\begin{align}
+\bm{\sigma} &= M \cdot \bm{pk} \nonumber\\
+\begin{pmatrix} \sigma_1 \\ \sigma_2  \\ \vdots  \\ \sigma_{256} \\ \end{pmatrix} &= \begin{pmatrix} h(m_1)_1 & h(m_1)_2 & \dots & h(m_1)_{256} \\ h(m_1)_2 & h(m_2)_2 & \dots & h(m_2)_{256} \\ \vdots & \vdots & \ddots & \vdots \\ h(m_{256})_1 & h(m_{256})_2 & \dots & h(m_{256})_{256} \\ \end{pmatrix} \begin{pmatrix} pk_1 \\ pk_2  \\ \vdots  \\ pk_{256} \\ \end{pmatrix} \nonumber 
+\end{align}
+
+So, we have the vector $P$ is given by \begin{equation}
+\label{eq:pkeys}
+    \bm{pk} = \bm{\sigma} \cdot M^{-1}.
+\end{equation}
+
+From expression \eqref{eq:main} and \eqref{eq:pkeys}, the solution is given by:
+
+\begin{center}
+\begin{boxed}
+{\sigma_m = h(m) \cdot \bm{\sigma} \cdot M^{-1}}
+\end{boxed}.
+\end{center}
+
+
+
+
+
+
+
+\end{document}
