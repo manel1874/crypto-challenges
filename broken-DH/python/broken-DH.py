@@ -134,7 +134,7 @@ def bsgs_attempt(g, h, p, cap, debug=False):
 
 #=================== RUN ===================#
 
-sol = bsgs_attempt(_g, _a, _p, 2**50)
+sol = bsgs_attempt(_g, _a, _p, 2**50, debug=True)
 print("r = ", sol)
 
 # >>> r = 996179739629170
