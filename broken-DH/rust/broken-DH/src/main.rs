@@ -3,23 +3,35 @@ Baby-step giant-step approach
 */
 
 use std::f64;
+use std::collections::HashMap;
+use num_bigint::{BigUint, BigInt};
 
 
-fn bsgs_attempt(cap : f64) -> f64 {
+
+fn bsgs_attempt(g : BigUint, p : BigUint, n : BigUint) {
     /* 
     Solve for x in h = g^x mod p given a prime p.
     If p is not prime, you shouldn't use BSGS anyway.
     */
 
-    let n = f64::ceil(f64::sqrt(cap))
 
     // Baby step
     let mut tbl = HashMap::new();
-    let mut gi = 1;
+    let mut gi = BigUint::parse_bytes(b"1", 10).unwrap();
+
+
+    let n_int: i32 = n.to_str_radix(10).parse().unwrap();
     
-    for i in 0..n {
-        
+    for i in 0..n_int {
+        tbl.insert(gi.to_str_radix(10), i);
+        gi = &gi * &g % &p;
     }
+
+    // Precompute via Fermat's Little Theorem
+    let exp = &n * (&p - BigUint::from(2u32));
+    let c = g.modpow(&exp, &p);
+
+    println!("{:?}", tbl);
 }
 
 
@@ -70,10 +82,20 @@ fn bsgs_attempt(g, h, p, cap, debug=False):
 fn main() {
     println!("Let us crack this challenge!\n");
 
-    let n = 101.0;
-    let (ceil_sqrt_n, sqrt_n) = bsgs_attempt(n);
+    let modulus = BigUint::parse_bytes(b"179769313486231590772930519078902473361797697", 10).unwrap();
+    let x = BigUint::parse_bytes(b"578960446186580977117854925043439539266349923328202820", 10).unwrap();
+    let y = BigUint::parse_bytes(b"76120582547389582323137850493559397925180747739176", 10).unwrap();
+    let z = &x % &modulus;
+    let w = &y % &modulus;
+    let result = &z * &w % &modulus;
 
-    println!("The square root of {} is {} and its cealing is {}", n, sqrt_n, ceil_sqrt_n);
 
+
+    let g = BigUint::parse_bytes(b"2", 10).unwrap();
+    let q = BigUint::parse_bytes(b"10", 10).unwrap();
+    let n = BigUint::parse_bytes(b"100", 10).unwrap();
+    bsgs_attempt(g, q, n);
+
+    println!("{:?}", result);
 
 }
